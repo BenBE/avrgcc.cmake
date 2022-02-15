@@ -1,0 +1,20 @@
+cmake_minimum_required(VERSION 3.16)
+
+# Variables regarding the AVR chip
+set(AVRGCC_MCU atmega328pb) # "MCU target chip to compile for"
+set(AVRGCC_FCPU 16000000) # "MCU clock frequency in Hz"
+set(AVRGCC_BAUD 115200) # "Connection baud rate in Baud"
+set(AVRGCC_PROGRAMMER usbasp) # "Programmer used for flashing"
+
+include("avrgcc.cmake/avrgcc.cmake")
+
+project(testproject)
+
+# Project setup
+add_executable(testproject
+    main.c
+)
+avrgcc_target(
+    AVR_TARGET testproject
+    # IMAGE_BASE 0x0000
+)
