@@ -1,0 +1,15 @@
+.*
+*~
+
+build/
+
+*.bin
+*.d
+*.elf
+*.hex
+*.lst
+*.map
+*.o
+*.tmp
+
+CMake*

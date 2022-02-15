@@ -1,0 +1,8 @@
+*	text=auto
+
+*.cmake	text
+*.txt	text
+
+*.c	text
+*.h	text
+*.s	text
