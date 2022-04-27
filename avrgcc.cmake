@@ -1,5 +1,11 @@
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
+set(AVRGCC_DEFAULT_PROGRAMMER atmelice_isp)
+
+set(AVRGCC_DEFAULT_MCU atmega328pb) # "MCU target chip to compile for")
+set(AVRGCC_DEFAULT_FCPU 8000000) # "MCU clock frequency in Hz")
+set(AVRGCC_DEFAULT_BAUD 115200) # "Connection baud rate in Baud")
+
 # program names
 set(AVRCPP   avr-g++)
 set(AVRC     avr-gcc)
@@ -38,6 +44,11 @@ function(avrgcc_target)
         SOURCE_DIR
         INCLUDE_DIR
 
+        MCU
+        FCPU
+        BAUD
+        PROGRAMMER
+
         IMAGE_BASE
     )
     cmake_parse_arguments(AVRGCC "" "${ONE_VAL_ARGS}" "" ${ARGN})
@@ -52,6 +63,22 @@ function(avrgcc_target)
 
     if("${AVRGCC_IMAGE_BASE}" STREQUAL "")
         set(AVRGCC_IMAGE_BASE 0x0000)
+    endif()
+
+    if("${AVRGCC_PROGRAMMER}" STREQUAL "")
+        set(AVRGCC_PROGRAMMER ${AVRGCC_DEFAULT_PROGRAMMER})
+    endif()
+
+    if("${AVRGCC_MCU}" STREQUAL "")
+        set(AVRGCC_MCU ${AVRGCC_DEFAULT_MCU})
+    endif()
+
+    if("${AVRGCC_FCPU}" STREQUAL "")
+        set(AVRGCC_FCPU ${AVRGCC_DEFAULT_FCPU})
+    endif()
+
+    if("${AVRGCC_BAUD}" STREQUAL "")
+        set(AVRGCC_BAUD ${AVRGCC_DEFAULT_BAUD})
     endif()
 
     # Project setup
@@ -111,7 +138,7 @@ function(avrgcc_target)
 
     # Compiling targets
     add_custom_target(${AVRGCC_FLASH_TARGET}
-        ${AVRDUDE} -c ${AVRGCC_PROGRAMMER} -p ${AVRGCC_MCU} -U flash:w:${AVR_TARGET}.hex
+        ${AVRDUDE} -c ${AVRGCC_PROGRAMMER} -p ${AVRGCC_MCU} -U flash:w:${AVRGCC_AVR_TARGET}.hex
         DEPENDS ${AVRGCC_HEX_TARGET}
         COMMENT "Flashing ${AVRGCC_AVR_TARGET}"
     )
