@@ -5,6 +5,7 @@ set(AVRGCC_DEFAULT_PROGRAMMER atmelice_isp)
 set(AVRGCC_DEFAULT_MCU atmega328pb) # "MCU target chip to compile for")
 set(AVRGCC_DEFAULT_FCPU 8000000) # "MCU clock frequency in Hz")
 set(AVRGCC_DEFAULT_BAUD 115200) # "Connection baud rate in Baud")
+set(AVRGCC_DEFAULT_BAUDNAME BAUD) # "Connection baud rate define name")
 
 # program names
 set(AVRCPP   avr-g++)
@@ -81,10 +82,14 @@ function(avrgcc_target)
         set(AVRGCC_BAUD ${AVRGCC_DEFAULT_BAUD})
     endif()
 
+    if("${AVRGCC_BAUDNAME}" STREQUAL "")
+        set(AVRGCC_BAUDNAME ${AVRGCC_DEFAULT_BAUDNAME})
+    endif()
+
     # Project setup
     target_compile_options(${AVRGCC_AVR_TARGET} PUBLIC -mmcu=${AVRGCC_MCU})
     target_compile_options(${AVRGCC_AVR_TARGET} PUBLIC -DF_CPU=${AVRGCC_FCPU})
-    target_compile_options(${AVRGCC_AVR_TARGET} PUBLIC -DBAUD=${AVRGCC_BAUD})
+    target_compile_options(${AVRGCC_AVR_TARGET} PUBLIC -D${AVRGCC_BAUDNAME}=${AVRGCC_BAUD})
 
     # Manage image base address
     target_compile_options(${AVRGCC_AVR_TARGET} PUBLIC -DBOOT_TEXT_START=${AVRGCC_IMAGE_BASE})
